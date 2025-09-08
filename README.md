@@ -16,6 +16,7 @@ In UserRepository, declare the following methods that help to find all user and 
 
 ```
 Your answer
+The data.sql is for database initialization. In this case, it is used for testing purposes to see if the written code by novice like us work or not.
 ```
 
 ## User Reservice - Complete the code
