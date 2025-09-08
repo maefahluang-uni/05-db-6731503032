@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,35 +23,44 @@ public class UserController {
     //TODO: add userrepository as `public` with @Autowired
     @Autowired
     public UserRepository repo;
-   
+        
     @PostMapping("/users")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
 
         //TODO: check if user with the username exists
-       
+        User existingUser = repo.findByUsername(user.getUsername());
+        if (existingUser != null) {
+            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+        }
+        
         //TODO: save the user
-
+        repo.save(user);
+        
         //TODO: remove below and return proper status
-        return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("User registered successfully", HttpStatus.CREATED);
     }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> list() {
-        
+                
         //TODO: remove below and return proper result
-        return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        List<User> users = repo.findAll();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        
+                
         //TODO: check if user with the id exists
-       
+        Optional<User> user = repo.findById(id);
+        if (!user.isPresent()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        
         //TODO: delete the user
-    
+        repo.deleteById(id);
+            
         //TODO: remove below and return proper status
-        return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
-
-
 }
